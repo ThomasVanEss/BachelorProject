@@ -5,10 +5,10 @@ fitline = function(modPars,colour,dist){
 
 
 #fit the gs-model with beta = 0
-fitmodel = function(dis,start) {
+fitmodel = function(dis,start,plot) {
   o2 = optim(start, LL, dist = dis, lower = 0,  method = "L-BFGS-B")
   modPars = as.vector(o2$par)
-  fitline(modPars,'red', dis)
+  if (plot){ fitline(modPars,'red', dis) }
   return(o2)
 }
 
@@ -27,10 +27,11 @@ fitmodel2 = function(dis,start,gamma) {
 simStats = function(nsamples,modPars,dist,count) {
   ksDistance = rep(0,nsamples); lrt = rep(0,nsamples); chiSquared = rep(0,nsamples)
   modExp = sum(count)*dist(modPars,1:(length(count)*2));
+  count  = c(count,rep(0,length(count)))
   datachi = sum((count - modExp)^2/modExp)
   dataks = ksDist(count,modExp)
   for (i in 1:nsamples) {
-    s = sample(x = 1:(length(count)*2), sum(count), replace = T, prob = dist(modPars,1:(length(count)*2))) 
+    s = sample(x = 1:(length(count)), sum(count), replace = T, prob = dist(modPars,1:length(count))) 
     freqs = tabulate(s)
     if (0) {
       optsimp = optim(modPars, LL,dist = dist, lower = 0,dat = freqs, method = "L-BFGS-B")
@@ -38,6 +39,7 @@ simStats = function(nsamples,modPars,dist,count) {
       lrt[i] = 2 * (optsimp$value - optsad$value)
     }
     chiSquared[i] = sum((modExp[1:length(freqs)] - freqs)^2 / modExp[1:length(freqs)]);
+    
     ksDistance[i] = ksDist(freqs,modExp)
   }
   chiSquared = sort(chiSquared); ksDistance = sort(ksDistance)

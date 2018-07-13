@@ -1,3 +1,4 @@
+#kolmogorov-smirnov distance
 ksDist = function (dist1,dist2) {
   max = 0; sum1 = 0; sum2 = 0; n = sum(dist1)
   for (i in 1:min(length(dist1),length(dist2))) {

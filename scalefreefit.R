@@ -2,7 +2,7 @@
 source("model.R")
 source("ksDist.R")
 source("modelfit.R")
-df = read.table("books.txt",sep=",", header = 1)
+df = read.table("Facebook.txt",sep=",", header = 1)
 ldf = log(df)
 nsamples = 1000
 plot(df,xlab = 'Degrees', ylab = 'Frequencies', log = 'xy')
@@ -16,7 +16,7 @@ ldegree = log(degree); lcount = log(count);
 #log likelihood
 LL = function (pars,dist,dat) {
   if (missing(dat)) {dat = count}
-  R = log(dist(pars,1:length(dat)))*dat;
+  R = log(dist(pars,1:length(dat)))*dat/100;
   return(sum(-R))
 }
 
